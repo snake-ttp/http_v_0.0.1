@@ -15,9 +15,10 @@ def get_res(path):
     return response.get(path,default_res)
 
 def handle_request(client_socket: socket.socket):
-    client_socket.recv(1024)
-    response = "HTTP/1.1 200 OK\r\n\r\n"
-    client_socket.send(response.encode())
+    data = client_socket.recv(1024)
+    m ,p , v = parse_request(data.decode())
+    res = get_res(p)
+    client_socket.send(res.encode())
 
 
 def main():
