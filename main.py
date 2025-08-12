@@ -20,10 +20,9 @@ def get_res(path):
         print(path)
         if len(path_list) >1:
             mesg = path_list[1]
-            l = len(mesg)
-            response[f"/echo/{mesg}"] = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\nabc"
+            response[f"/echo/{mesg}"] = build_response(mesg)
         else:
-            response[f"/echo"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: 0\r\n\r\n"
+            response[f"/echo"] = build_response("")
             
     if path == "/":
         return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>")
