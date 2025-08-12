@@ -16,7 +16,7 @@ def get_res(path):
 
 def handle_request(client_socket: socket.socket):
     data = client_socket.recv(1024)
-    m ,p , v = parse_request(data.decode())
+    m ,p , v = parse_request(data.decode()) #method path version
     res = get_res(p)
     client_socket.send(res.encode())
 
