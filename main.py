@@ -13,6 +13,8 @@ def get_res(path):
     response = {
         "/": "HTTP/1.1 200 OK\r\n\r\n"
     }
+    path_list: list = path.split("/")[1:]
+    print(path.split("/")[1:])
     
     
     default_res = "HTTP/1.1 404 Not Found\r\n\r\n"
