@@ -10,7 +10,7 @@ def parse_request(req_data):
     return method, path, version
 
 def get_res(path):
-    response = {
+    response: dict = {
         "/": "HTTP/1.1 200 OK\r\n\r\n"
     }
     path_list: list = path.split("/")[1:]
@@ -22,6 +22,7 @@ def get_res(path):
             response[f"/{path[0]}/{path[1]}"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\nabc"
         else:
             response[f"/{path[0]}"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\n"
+    print(response)
     
     default_res = "HTTP/1.1 404 Not Found\r\n\r\n"
     return response.get(path,default_res)
@@ -40,16 +41,16 @@ def main():
     print ("Server is running on port : 6000")
     
     #server_socket.listen()
-    
-    try:
-        client, addr = server_socket.accept()
-        print(f"Connection from {addr} has been established")
-        handle_request(client_socket=client)
-        
-        client.close()
-        
-    except Exception as e:
-        print(f"Error {e}")
+    while True:
+        try:
+            client, addr = server_socket.accept()
+            print(f"Connection from {addr} has been established")
+            handle_request(client_socket=client)
+            
+            client.close()
+            
+        except Exception as e:
+            print(f"Error {e}")
     
     
 
