@@ -13,15 +13,16 @@ def get_res(path):
     response: dict = {
         "/": "HTTP/1.1 200 OK\r\n\r\n"
     }
-    path_list: list = path.split("/")[1:]
-    print(path.split("/")[1:])
+    path_list: list = path.strip("/").split("/")
     
-    if path[0]=="echo":
-        if path[1] is not None:
-            l = len(path[1])
-            response[f"/{path[0]}/{path[1]}"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\nabc"
+    if len(path_list) > 0 and path_list[0] == "echo":
+        print(path)
+        if len(path_list) >1:
+            mesg = path_list[1]
+            l = len(mesg)
+            response[f"/echo/{mesg}"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\nabc"
         else:
-            response[f"/{path[0]}"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\n"
+            response[f"/echo"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\n"
     print(response)
     
     default_res = "HTTP/1.1 404 Not Found\r\n\r\n"
