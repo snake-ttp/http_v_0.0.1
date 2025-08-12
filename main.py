@@ -4,12 +4,16 @@ def parse_request(req_data):
     lines = req_data.split("\r\n")
     start_line = lines[0]
     method , path, version = start_line.split(" ")
+    print("Method : " ,method)
+    print("Path : ", path)
+    print("Version: ", version)
     return method, path, version
 
 def get_res(path):
     response = {
         "/": "HTTP/1.1 200 OK\r\n\r\n"
     }
+    
     
     default_res = "HTTP/1.1 404 Not Found\r\n\r\n"
     return response.get(path,default_res)
