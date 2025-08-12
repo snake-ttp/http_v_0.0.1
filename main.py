@@ -11,25 +11,21 @@ def parse_request(req_data):
     return method, path, version
 
 def get_res(path):
-    response: dict = {
-        "/": "HTTP/1.1 200 OK\r\n\r\n"
-    }
+    
     path_list: list = path.strip("/").split("/")
     
     if len(path_list) > 0 and path_list[0] == "echo":
         print(path)
         if len(path_list) >1:
             mesg = path_list[1]
-            response[f"/echo/{mesg}"] = build_response(mesg)
+            return build_response(mesg)
         else:
-            response[f"/echo"] = build_response("")
+            return build_response("")
             
     if path == "/":
         return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>")
-    print(response)
     
-    default_res = "HTTP/1.1 404 Not Found\r\n\r\n"
-    return response.get(path,default_res)
+    return build_response("<h1>404 Not Found</h1>", status="404 Not Found", content_type="text/html")
 
 def handle_request(client_socket: socket.socket):
     data = client_socket.recv(1024)
