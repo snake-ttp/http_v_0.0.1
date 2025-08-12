@@ -16,6 +16,12 @@ def get_res(path):
     path_list: list = path.split("/")[1:]
     print(path.split("/")[1:])
     
+    if path[0]=="echo":
+        if path[1] is not None:
+            l = len(path[1])
+            response[f"/{path[0]}/{path[1]}"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\nabc"
+        else:
+            response[f"/{path[0]}"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\n"
     
     default_res = "HTTP/1.1 404 Not Found\r\n\r\n"
     return response.get(path,default_res)
