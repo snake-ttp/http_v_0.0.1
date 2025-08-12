@@ -1,4 +1,5 @@
 import socket
+from Builder.responseBuilder import build_response
 
 def parse_request(req_data):
     lines = req_data.split("\r\n")
@@ -23,6 +24,9 @@ def get_res(path):
             response[f"/echo/{mesg}"] = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\nabc"
         else:
             response[f"/echo"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: 0\r\n\r\n"
+            
+    if path == "/":
+        return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>")
     print(response)
     
     default_res = "HTTP/1.1 404 Not Found\r\n\r\n"
