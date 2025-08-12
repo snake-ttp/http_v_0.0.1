@@ -20,9 +20,9 @@ def get_res(path):
         if len(path_list) >1:
             mesg = path_list[1]
             l = len(mesg)
-            response[f"/echo/{mesg}"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\nabc"
+            response[f"/echo/{mesg}"] = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\nabc"
         else:
-            response[f"/echo"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: {l}\r\n\r\n"
+            response[f"/echo"] = f"HTTP/1.1 200 )K\r\nContent-Type: text/plain\r\nContent-Length: 0\r\n\r\n"
     print(response)
     
     default_res = "HTTP/1.1 404 Not Found\r\n\r\n"
