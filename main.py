@@ -73,12 +73,15 @@ def main():
             print(f"Connection from {addr} has been established")
             # Create new thread for new client
             client_handler = threading.Thread(target=handle_request, args=(client,))
+            # handle concurrent users 
             client_handler.start()
         except Exception as e:
             print(f"Error accepting connection: {e}")
 
 if __name__ == "__main__":
     main()
+    
+# Developed By Thush 
     
     
 """
