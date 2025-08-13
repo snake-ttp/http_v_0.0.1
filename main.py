@@ -22,6 +22,8 @@ def get_res(path):
             return build_response(mesg)
         else:
             return build_response("")
+    elif len(path_list)>0 and path_list[0] == "user-agent":
+        pass
             
     if path == "/":
         return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>",content_type="text/html")
