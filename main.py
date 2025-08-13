@@ -35,6 +35,8 @@ def get_res(path, data_set:dict):
         k = data_set.get("User-Agent")
         if k is not None:
             return build_response(k)
+    elif len(path_list) > 0 and path_list[0] == "files":
+        pass
             
     if path == "/":
         return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>",content_type="text/html")
