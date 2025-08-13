@@ -4,12 +4,19 @@ import threading
 
 def parse_request(req_data):
     lines = req_data.split("\r\n")
+    print(lines)
+    data_set : dict = {}
+    for x in lines:
+        arr = x.split(":")
+        if len(arr)>1:
+            data_set[arr[0].strip()] = arr[1]
+    print(d)
     start_line = lines[0]
     method , path, version = start_line.split(" ")
     print("Method : " ,method)
     print("Path : ", path)
     print("Version: ", version)
-    return method, path, version
+    return method, path, version, data_set
 
 def get_res(path):
     
@@ -60,7 +67,7 @@ def main():
         try:
             client, addr = server_socket.accept()
             print(f"Connection from {addr} has been established")
-            # Create a new thread for each client connection
+            # Create new thread for new client
             client_handler = threading.Thread(target=handle_request, args=(client,))
             client_handler.start()
         except Exception as e:
