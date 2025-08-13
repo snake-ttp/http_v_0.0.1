@@ -1,6 +1,7 @@
 import socket
 from Builder.responseBuilder import build_response
 import threading
+import os
 
 def parse_request(req_data):
     lines = req_data.split("\r\n")
@@ -36,7 +37,26 @@ def get_res(path, data_set:dict):
         if k is not None:
             return build_response(k)
     elif len(path_list) > 0 and path_list[0] == "files":
-        pass
+        # generate file path
+        path_arr: list = path_list[1:]
+        if len(path_arr) > 1:
+            file_path = "/".join(path_arr)
+        else:
+            file_path = path_list[1]
+        
+        if os.path.isfile(file_path):
+            try:
+                with open(file_path,"r") as f:
+                    return build_response(f.read(),content_type="application/octet-stream")
+            except:
+                return build_response(status="404 Not Found")
+                
+        else:
+            return build_response(status="404 Not Found")
+        return build_response(file_path)
+        
+        
+        
             
     if path == "/":
         return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>",content_type="text/html")
