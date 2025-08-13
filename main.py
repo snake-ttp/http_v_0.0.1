@@ -1,5 +1,6 @@
 import socket
 from Builder.responseBuilder import build_response
+import threading
 
 def parse_request(req_data):
     lines = req_data.split("\r\n")
@@ -23,41 +24,50 @@ def get_res(path):
             return build_response("")
             
     if path == "/":
-        return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>")
+        return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>",content_type="text/html")
     
     return build_response("<h1>404 Not Found</h1>", status="404 Not Found", content_type="text/html")
 
 def handle_request(client_socket: socket.socket):
-    while True:
-        data = client_socket.recv(1024)
-        if not data:
-            break
+    try:
+        request_data = b""
+        while True:
+            data = client_socket.recv(1024)
+            if not data:
+                break 
+            request_data += data
+            if b"\r\n\r\n" in request_data:
+                break
         
-        if data:
-            m ,p , v = parse_request(data.decode()) #method path version
+        if request_data:
+            m, p, v = parse_request(request_data.decode())
             res = get_res(p)
-            client_socket.send(res.encode())
-    client_socket.close()
-
+            client_socket.sendall(res.encode())
+    except Exception as e:
+        print(f"Error handling request: {e}")
+    finally:
+        client_socket.close()
 
 def main():
     print("Hello from http-web-server!")
-    server_socket = socket.create_server(("localhost", 6000),reuse_port=True)
-    #server_socket.accept() # wait for client
-    print ("Server is running on port : 6000")
+    server_socket = socket.create_server(("localhost", 4123), reuse_port=True)
+    server_socket.listen()
+    print("Server is running on port: 4123")
     
-    #server_socket.listen()
     while True:
         try:
             client, addr = server_socket.accept()
             print(f"Connection from {addr} has been established")
-            handle_request(client_socket=client)
-            
+            # Create a new thread for each client connection
+            client_handler = threading.Thread(target=handle_request, args=(client,))
+            client_handler.start()
         except Exception as e:
-            print(f"Error {e}")
-    
-    
-
+            print(f"Error accepting connection: {e}")
 
 if __name__ == "__main__":
     main()
+    
+    
+"""
+    issue is port number 6000  change the port number 4123
+"""
