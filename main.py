@@ -6,11 +6,12 @@ def parse_request(req_data):
     lines = req_data.split("\r\n")
     print(lines)
     data_set : dict = {}
+    
     for x in lines:
         arr = x.split(":")
         if len(arr)>1:
             data_set[arr[0].strip()] = arr[1]
-    print(d)
+            
     start_line = lines[0]
     method , path, version = start_line.split(" ")
     print("Method : " ,method)
@@ -18,7 +19,7 @@ def parse_request(req_data):
     print("Version: ", version)
     return method, path, version, data_set
 
-def get_res(path):
+def get_res(path, data_set:dict):
     
     path_list: list = path.strip("/").split("/")
     
@@ -30,7 +31,10 @@ def get_res(path):
         else:
             return build_response("")
     elif len(path_list)>0 and path_list[0] == "user-agent":
-        pass
+        # check User-Agent header in data_set
+        k = data_set.get("User-Agent")
+        if k is not None:
+            return build_response(k)
             
     if path == "/":
         return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>",content_type="text/html")
@@ -49,8 +53,8 @@ def handle_request(client_socket: socket.socket):
                 break
         
         if request_data:
-            m, p, v = parse_request(request_data.decode())
-            res = get_res(p)
+            m, p, v, d = parse_request(request_data.decode())
+            res = get_res(p, data_set=d)
             client_socket.sendall(res.encode())
     except Exception as e:
         print(f"Error handling request: {e}")
