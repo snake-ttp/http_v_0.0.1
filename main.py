@@ -28,10 +28,16 @@ def get_res(path):
     return build_response("<h1>404 Not Found</h1>", status="404 Not Found", content_type="text/html")
 
 def handle_request(client_socket: socket.socket):
-    data = client_socket.recv(1024)
-    m ,p , v = parse_request(data.decode()) #method path version
-    res = get_res(p)
-    client_socket.send(res.encode())
+    while True:
+        data = client_socket.recv(1024)
+        if not data:
+            break
+        
+        if data:
+            m ,p , v = parse_request(data.decode()) #method path version
+            res = get_res(p)
+            client_socket.send(res.encode())
+    client_socket.close()
 
 
 def main():
@@ -46,8 +52,6 @@ def main():
             client, addr = server_socket.accept()
             print(f"Connection from {addr} has been established")
             handle_request(client_socket=client)
-            
-            client.close()
             
         except Exception as e:
             print(f"Error {e}")
