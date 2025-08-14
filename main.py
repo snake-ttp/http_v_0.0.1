@@ -15,9 +15,11 @@ def parse_request(req_data):
             
     start_line = lines[0]
     method , path, version = start_line.split(" ")
+    req_body = lines[-1]
     print("Method : " ,method)
     print("Path : ", path)
     print("Version: ", version)
+    print("Body : ", req_body)
     return method, path, version, data_set
 
 def get_res(path, data_set:dict, method: str ="GET"):
