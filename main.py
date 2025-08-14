@@ -57,7 +57,14 @@ def get_res(path, data_set:dict, method: str ="GET"):
     
     if method == "POST":
         if len(path_list) > 0 and path_list[0] == "files":
-            pass
+            if len(path_list) >1 :
+                path_arr: list = path_list[1:]
+                if len(path_arr) > 1:
+                    file_path = "/".join(path_arr)
+                else:
+                    file_path = path_list[1]
+            else:
+                return build_response("File cration Fail", status="400 Bad Request")
         
         
         
