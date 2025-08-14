@@ -14,65 +14,68 @@ def parse_request(req_data):
 
     start_line = lines[0]
     method, path, version = start_line.split(" ")
+    print(method)
+    print(path)
+    print(version)
     return method, path, version, data_set, ""
 
-def get_res(path, data_set:dict, method: str ="GET",req_body:str = ""):
+def get_res(path, data_set:dict):
     
     path_list: list = path.strip("/").split("/")
     
-    if method == "GET":
-        if len(path_list) > 0 and path_list[0] == "echo":
-            print(path)
-            if len(path_list) >1:
-                mesg = path_list[1]
-                return build_response(mesg)
-            else:
+    
+    if len(path_list) > 0 and path_list[0] == "echo":
+        print(path)
+        if len(path_list) >1:
+            mesg = path_list[1]
+            return build_response(mesg)
+        else:
                 return build_response("")
-        elif len(path_list)>0 and path_list[0] == "user-agent":
+    elif len(path_list)>0 and path_list[0] == "user-agent":
             # check User-Agent header in data_set
-            k = data_set.get("User-Agent")
-            if k is not None:
-                return build_response(k)
-        elif len(path_list) > 0 and path_list[0] == "files":
+        k = data_set.get("User-Agent")
+        if k is not None:
+            return build_response(k)
+    elif len(path_list) > 0 and path_list[0] == "files":
             # generate file path
-            path_arr: list = path_list[1:]
-            if len(path_arr) > 1:
-                file_path = "/".join(path_arr)
-            else:
-                file_path = path_list[1]
+        path_arr: list = path_list[1:]
+        if len(path_arr) > 1:
+            file_path = "/".join(path_arr)
+        else:
+            file_path = path_list[1]
             
-            if os.path.isfile(file_path):
-                try:
-                    with open(file_path,"r") as f:
-                        return build_response(f.read(),content_type="application/octet-stream")
-                except:
-                    return build_response(status="404 Not Found")
-                    
-            else:
+        if os.path.isfile(file_path):
+            try:
+                with open(file_path,"r") as f:
+                    return build_response(f.read(),content_type="application/octet-stream")
+            except:
                 return build_response(status="404 Not Found")
-            return build_response(file_path)
-        
-    if method == "POST":
-        if len(path_list) > 0 and path_list[0] == "files":
-            if len(path_list) >1 :
-                path_arr: list = path_list[1:]
-                if len(path_arr) > 1:
-                    file_path = "/".join(path_arr)
-                else:
-                    file_path = path_list[1]
-                with open(file_path, "w") as f:
-                    f.write(req_body)
-                return build_response(status="201 Created")
-            else:
-                return build_response("File cration Fail", status="400 Bad Request")
-        
-        
-        
-            
+                    
+        else:
+            return build_response(status="404 Not Found")
+        return build_response(file_path)
+    
     if path == "/":
         return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>",content_type="text/html")
     
     return build_response("<h1>404 Not Found</h1>", status="404 Not Found", content_type="text/html")
+        
+        
+def post_res(path, data_set:dict, req_body:str):
+    path_list: list = path.strip("/").split("/")
+    if len(path_list) >1 :
+        path_arr: list = path_list[1:]
+        if len(path_arr) > 1:
+            file_path = "/".join(path_arr)
+        else:
+            file_path = path_list[1]
+            with open(file_path, "w") as f:
+                f.write(req_body)
+            return build_response(status="201 Created")
+    else:
+        return build_response("File cration Fail", status="400 Bad Request")
+    
+        
 
 def handle_request(client_socket: socket.socket):
     try:
@@ -83,16 +86,14 @@ def handle_request(client_socket: socket.socket):
             if not chunk:
                 break
             request_data += chunk
-
-        # Step 2: Parse headers
+            
         header_part, _, remaining = request_data.partition(b"\r\n\r\n")
         headers_text = header_part.decode()
         method, path, version, data_set, _ = parse_request(headers_text)
 
-        # Step 3: Get content length
         content_length = int(data_set.get("Content-Length", 0))
 
-        # Step 4: Read body
+        #  Read body
         body = remaining
         while len(body) < content_length:
             chunk = client_socket.recv(1024)
@@ -100,8 +101,13 @@ def handle_request(client_socket: socket.socket):
                 break
             body += chunk
 
-        # Step 5: Pass full body to handler
-        res = get_res(path, data_set=data_set, method=method, req_body=body.decode())
+        if method == "GET":
+            res = get_res(path,data_set)
+        elif method == "POST":
+            res = post_res(path,data_set, body.decode())
+        else:
+            res = build_response("<h1>405 Method Not Allowed</h1>", status="405 Method Not Allowed")
+            
         client_socket.sendall(res.encode())
 
     except Exception as e:
