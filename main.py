@@ -63,6 +63,8 @@ def get_res(path, data_set:dict, method: str ="GET"):
                     file_path = "/".join(path_arr)
                 else:
                     file_path = path_list[1]
+                with open(file_path, "w") as f:
+                    f.write("hello")
             else:
                 return build_response("File cration Fail", status="400 Bad Request")
         
