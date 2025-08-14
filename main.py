@@ -20,7 +20,7 @@ def parse_request(req_data):
     print("Version: ", version)
     return method, path, version, data_set
 
-def get_res(path, data_set:dict):
+def get_res(path, data_set:dict, method: str ="GET"):
     
     path_list: list = path.strip("/").split("/")
     
@@ -54,6 +54,10 @@ def get_res(path, data_set:dict):
         else:
             return build_response(status="404 Not Found")
         return build_response(file_path)
+    
+    if method == "POST":
+        if len(path_list) > 0 and path_list[0] == "files":
+            pass
         
         
         
