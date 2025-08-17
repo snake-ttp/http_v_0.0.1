@@ -1,4 +1,4 @@
-def build_response(content_encoding, body: str="", status="200 OK", content_type="text/plain" ):
+def build_response(content_encoding:bool , body: str="", status="200 OK", content_type="text/plain" ):
     response:str = f"HTTP/1.1 {status}\r\n"
     
     if content_type:
