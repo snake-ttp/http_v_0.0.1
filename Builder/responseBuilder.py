@@ -1,14 +1,15 @@
-def build_response(content_encoding:bool , body: str="", status="200 OK", content_type="text/plain" ):
+def build_response(body: str="", status="200 OK", headers: dict = {}):
     response:str = f"HTTP/1.1 {status}\r\n"
     
-    if content_type:
+    for x,y in headers.items():
+        if x == "Content-Type":
+            response += (
+                f"Content-Type: {y}\r\n"
+                f"Content-Length: {len(body.encode())}\r\n"
+            )
+            continue
         response += (
-            f"Content-Type: {content_type}\r\n"
-            f"Content-Length: {len(body.encode())}\r\n"
-        )
-    if content_encoding:
-        response += (
-            f"Content-Encoding: gzip"
+            f"{x}: {y}\r\n"
         )
     
     response += (
@@ -18,6 +19,8 @@ def build_response(content_encoding:bool , body: str="", status="200 OK", conten
     )
     
     return response
+
+#print(build_response("asasdas","200 OK",{"Content-Type":"text/html","Content-Encoding":"gzip"}))
     
     
     
