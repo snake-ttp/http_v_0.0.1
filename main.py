@@ -54,24 +54,19 @@ def get_res(path, data_set:dict):
                 with open(file_path,"r") as f:
                     body = f.read()
                     headers["Content-Type"] = "application/octet-stream"
-                    #return build_response(f.read(),content_type="application/octet-stream")
+                
             except:
                 status = "404 Not Found"
-                #return build_response(status="404 Not Found")
                     
         else:
-            status = "404 Not Found"
-            #return build_response(status="404 Not Found")
+            status = "404 Not Found"       
         body = file_path
-        #return build_response(file_path)
+        
     
     if path == "/":
         body = "<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>"
         headers["Content-Type"] = "text/html"
-        #return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>",content_type="text/html")
-        
-    
-    #return build_response("<h1>404 Not Found</h1>", status="404 Not Found", content_type="text/html")
+
     return status, body, headers
         
         
@@ -89,11 +84,9 @@ def post_res(path, data_set:dict, req_body:str):
             with open(file_path, "w") as f:
                 f.write(req_body)
                 status = "201 Created"
-            # return build_response(status="201 Created")
     else:
         body = "File cration Fail"
         status = "400 Bad Request"
-        #return build_response("File cration Fail", status="400 Bad Request")
     return status,body,headers
     
         
@@ -131,7 +124,7 @@ def handle_request(client_socket: socket.socket):
             b = "<h1>405 Method Not Allowed</h1>"
             h = {}
         
-        res = build_response("<h1>405 Method Not Allowed</h1>", status="405 Method Not Allowed")
+        res = build_response(b,s,h)
             
         client_socket.sendall(res.encode())
 
