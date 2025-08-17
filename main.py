@@ -23,19 +23,24 @@ def get_res(path, data_set:dict):
     
     path_list: list = path.strip("/").split("/")
     
+    status: str = "404 Not Found"
+    body: str = "<h1>404 Not Found</h1>"
+    headers: dict = {"Content-Type": "text/html"}
+    
     
     if len(path_list) > 0 and path_list[0] == "echo":
         print(path)
         if len(path_list) >1:
             mesg = path_list[1]
-            return build_response(mesg)
+            body = mesg
         else:
-                return build_response("")
+                body = mesg
     elif len(path_list)>0 and path_list[0] == "user-agent":
             # check User-Agent header in data_set
         k = data_set.get("User-Agent")
         if k is not None:
-            return build_response(k)
+            #return build_response(k)
+            body = k
     elif len(path_list) > 0 and path_list[0] == "files":
             # generate file path
         path_arr: list = path_list[1:]
@@ -47,22 +52,34 @@ def get_res(path, data_set:dict):
         if os.path.isfile(file_path):
             try:
                 with open(file_path,"r") as f:
-                    return build_response(f.read(),content_type="application/octet-stream")
+                    body = f.read()
+                    headers["Content-Type"] = "application/octet-stream"
+                    #return build_response(f.read(),content_type="application/octet-stream")
             except:
-                return build_response(status="404 Not Found")
+                status = "404 Not Found"
+                #return build_response(status="404 Not Found")
                     
         else:
-            return build_response(status="404 Not Found")
-        return build_response(file_path)
+            status = "404 Not Found"
+            #return build_response(status="404 Not Found")
+        body = file_path
+        #return build_response(file_path)
     
     if path == "/":
-        return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>",content_type="text/html")
+        body = "<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>"
+        headers["Content-Type"] = "text/html"
+        #return build_response("<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>",content_type="text/html")
+        
     
-    return build_response("<h1>404 Not Found</h1>", status="404 Not Found", content_type="text/html")
+    #return build_response("<h1>404 Not Found</h1>", status="404 Not Found", content_type="text/html")
+    return status, body, headers
         
         
 def post_res(path, data_set:dict, req_body:str):
     path_list: list = path.strip("/").split("/")
+    status = "404 Not Found"
+    body = "<h2>Not Found </h2>"
+    headers: dict ={}
     if len(path_list) >1 :
         path_arr: list = path_list[1:]
         if len(path_arr) > 1:
@@ -71,9 +88,13 @@ def post_res(path, data_set:dict, req_body:str):
             file_path = path_list[1]
             with open(file_path, "w") as f:
                 f.write(req_body)
-            return build_response(status="201 Created")
+                status = "201 Created"
+            # return build_response(status="201 Created")
     else:
-        return build_response("File cration Fail", status="400 Bad Request")
+        body = "File cration Fail"
+        status = "400 Bad Request"
+        #return build_response("File cration Fail", status="400 Bad Request")
+    return status,body,headers
     
         
 
@@ -102,11 +123,15 @@ def handle_request(client_socket: socket.socket):
             body += chunk
 
         if method == "GET":
-            res = get_res(path,data_set)
+            s,b,h = get_res(path,data_set)
         elif method == "POST":
-            res = post_res(path,data_set, body.decode())
+            s,b,h = post_res(path,data_set, body.decode())
         else:
-            res = build_response("<h1>405 Method Not Allowed</h1>", status="405 Method Not Allowed")
+            s = "405 Method Not Allowed"
+            b = "<h1>405 Method Not Allowed</h1>"
+            h = {}
+        
+        res = build_response("<h1>405 Method Not Allowed</h1>", status="405 Method Not Allowed")
             
         client_socket.sendall(res.encode())
 
