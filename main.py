@@ -123,6 +123,10 @@ def handle_request(client_socket: socket.socket):
             s = "405 Method Not Allowed"
             b = "<h1>405 Method Not Allowed</h1>"
             h = {}
+            
+        for x,y in data_set.items():
+            if x == "Accept-Encoding" and y == "gzip":
+                h["Content-Encoding"] = "gzip"
         
         res = build_response(b,s,h)
             
