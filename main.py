@@ -54,6 +54,7 @@ def get_res(path, data_set:dict):
                 with open(file_path,"r") as f:
                     body = f.read()
                     headers["Content-Type"] = "application/octet-stream"
+                    status = "200 OK"
                 
             except:
                 status = "404 Not Found"
