@@ -24,9 +24,9 @@ def get_res(path, data_set:dict):
     
     path_list: list = path.strip("/").split("/")
     
-    status: str = "404 Not Found"
-    body: str = "<h1>404 Not Found</h1>"
-    headers: dict = {"Content-Type": "text/html"}
+    status: str = "200 OK"
+    body: str = ""
+    headers: dict = {"Content-Type": "text/plain"}
     
     
     if len(path_list) > 0 and path_list[0] == "echo":
