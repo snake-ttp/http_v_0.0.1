@@ -32,7 +32,7 @@ def get_res(path, data_set:dict):
         body = "<h1>hi welcome to HTTP server<h1> <h4>developed by Thush</h4>"
         headers["Content-Type"] = "text/html"
     
-    if len(path_list) > 0 and path_list[0] == "echo":
+    elif len(path_list) > 0 and path_list[0] == "echo":
         print(path)
         if len(path_list) >1:
             mesg = path_list[1]
@@ -48,26 +48,35 @@ def get_res(path, data_set:dict):
         else:
             body = "No user-Agent found"
         headers["Content-Type"] = "text/plain"
+        
     elif len(path_list) > 0 and path_list[0] == "files":
             # generate file path
-        path_arr: list = path_list[1:]
-        if len(path_arr) > 1:
-            file_path = "/".join(path_arr)
+        
+        if len(path_list) > 1:
+            file_path = "/".join(path_list[1:])
+            
+            if os.path.isfile(file_path):
+                try:
+                    with open(file_path,"r") as f:
+                        body = f.read()
+                        headers["Content-Type"] = "application/octet-stream"
+                        status = "200 OK"
+                    
+                except:
+                    status = "500 Internal Server Error"
+                    body = "<h1>Internal Server Error</h1>"
+                    headers["Content-Type"] = "text/html"
+            else:
+                status = "404 Not Found"
+                body = "<h1>Not Found :( <h1>"
+                headers["Content-Type"] = "text/html"
         else:
             file_path = path_list[1]
             
-        if os.path.isfile(file_path):
-            try:
-                with open(file_path,"r") as f:
-                    body = f.read()
-                    headers["Content-Type"] = "application/octet-stream"
-                    status = "200 OK"
-                
-            except:
-                status = "404 Not Found"
+        
                     
-        else:
-            status = "404 Not Found"       
+        # else:
+        #     status = "404 Not Found"       
         body = file_path
         
     
