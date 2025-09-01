@@ -1,8 +1,11 @@
 import gzip
 
-def build_response(body: str = "", status="200 OK", headers: dict = {}):
-    # encode body to bytes
-    raw_body = body.encode()
+def build_response(body: str | bytes = "", status="200 OK", headers: dict = {}):
+    
+    if isinstance(body, str):
+        raw_body = body.encode()
+    else:
+        raw_body = body
 
     if headers.get("Content-Encoding") == "gzip":  #chk gzip encoding
         raw_body = gzip.compress(raw_body)

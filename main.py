@@ -151,7 +151,7 @@ def handle_request(client_socket: socket.socket):
         
         res = build_response(b,s,h)
             
-        client_socket.sendall(res.encode())
+        client_socket.sendall(res)
 
     except Exception as e:
         print(f"Error handling request: {e}")
