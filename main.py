@@ -28,6 +28,9 @@ def get_res(path, data_set:dict):
     body: str = ""
     headers: dict = {"Content-Type": "text/plain"}
     
+    if path == "/":   # root path
+        body = "<h1>hi welcome to HTTP server<h1> <h4>developed by Thush</h4>"
+        headers["Content-Type"] = "text/html"
     
     if len(path_list) > 0 and path_list[0] == "echo":
         print(path)
@@ -42,6 +45,9 @@ def get_res(path, data_set:dict):
         if k is not None:
             #return build_response(k)
             body = k
+        else:
+            body = "No user-Agent found"
+        headers["Content-Type"] = "text/plain"
     elif len(path_list) > 0 and path_list[0] == "files":
             # generate file path
         path_arr: list = path_list[1:]
@@ -65,9 +71,7 @@ def get_res(path, data_set:dict):
         body = file_path
         
     
-    if path == "/":
-        body = "<h1>hi welcome to HTTP server<h1> <h4>developd by Thush</h4>"
-        headers["Content-Type"] = "text/html"
+    
 
     return status, body, headers
         
