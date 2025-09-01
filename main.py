@@ -135,10 +135,7 @@ def handle_request(client_socket: socket.socket):
             
                 l : list = [x.strip() for x in y.split(",")]
                 if "gzip" in l:
-                    h["Content-Encoding"] = "gzip"
-                    
-                    #compress b to gzip
-                    b = gzip.compress(b)  
+                    h["Content-Encoding"] = "gzip" 
             
         
         res = build_response(b,s,h)

@@ -1,3 +1,5 @@
+import gzip
+
 def build_response(body: str="", status="200 OK", headers: dict = {}):
     response:str = f"HTTP/1.1 {status}\r\n"
     
@@ -8,6 +10,9 @@ def build_response(body: str="", status="200 OK", headers: dict = {}):
                 f"Content-Length: {len(body.encode())}\r\n"
             )
             continue
+        elif x == "Content-Encoding":
+            #compress b to gzip
+            b = gzip.compress(b) 
         response += (
             f"{x}: {y}\r\n"
         )
