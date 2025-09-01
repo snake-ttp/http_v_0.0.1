@@ -126,11 +126,15 @@ def handle_request(client_socket: socket.socket):
             h = {}
             
         for x,y in data_set.items():
-            print(y)
-            l : list = [x.strip() for x in y.split(",")]
-            print(l)
-            if x == "Accept-Encoding" and "gzip" in l:
-                h["Content-Encoding"] = "gzip"
+              
+            if x == "Accept-Encoding":  # check heder is Accept-Encoding
+                
+                # y is string it contains values. like invalied-encode , gzip, invalied-encode
+                # y string split , and added to list multiple elmnts
+            
+                l : list = [x.strip() for x in y.split(",")]
+                if "gzip" in l:
+                    h["Content-Encoding"] = "gzip"
             
         
         res = build_response(b,s,h)
