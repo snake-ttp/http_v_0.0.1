@@ -37,7 +37,7 @@ def get_res(path, data_set:dict):
             mesg = path_list[1]
             body = mesg
         else:
-                body = mesg
+                body = ""
     elif len(path_list)>0 and path_list[0] == "user-agent":
             # check User-Agent header in data_set
         k = data_set.get("User-Agent")
@@ -56,7 +56,7 @@ def get_res(path, data_set:dict):
             
             if os.path.isfile(file_path):
                 try:
-                    with open(file_path,"r") as f:
+                    with open(file_path,"rb") as f:
                         body = f.read()
                         headers["Content-Type"] = "application/octet-stream"
                         status = "200 OK"
