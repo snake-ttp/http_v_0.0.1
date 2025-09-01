@@ -153,16 +153,23 @@ def main():
     server_socket.listen()
     print("Server is running on port: 4123")
     
-    while True:
-        try:
-            client, addr = server_socket.accept()
-            print(f"Connection from {addr} has been established")
-            # Create new thread for new client
-            client_handler = threading.Thread(target=handle_request, args=(client,))
-            # handle concurrent users 
-            client_handler.start()
-        except Exception as e:
-            print(f"Error accepting connection: {e}")
+    try:
+        while True:
+            try:
+                client, addr = server_socket.accept()
+                print(f"Connection from {addr} has been established")
+                # Create new thread for new client
+                client_handler = threading.Thread(target=handle_request, args=(client,))
+                # handle concurrent users 
+                client_handler.start()
+            except Exception as e:
+                print(f"Error accepting connection: {e}")
+    except KeyboardInterrupt as e:
+        print("Key Board Interupt")
+    except Exception as e:
+        print(f"err : {e}")
+    finally:
+        print("byeee!")
 
 if __name__ == "__main__":
     main()
