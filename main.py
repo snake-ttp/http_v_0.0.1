@@ -126,9 +126,10 @@ def handle_request(client_socket: socket.socket):
             h = {}
             
         for x,y in data_set.items():
-            encode_ :list = y.split(",")
-            print(encode_)
-            if x == "Accept-Encoding" and "gzip" in encode_:
+            print(y)
+            l : list = [x.strip() for x in y.split(",")]
+            print(l)
+            if x == "Accept-Encoding" and "gzip" in l:
                 h["Content-Encoding"] = "gzip"
             
         
