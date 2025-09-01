@@ -2,7 +2,6 @@ import socket
 from Builder.responseBuilder import build_response
 import threading
 import os
-import gzip
 
 def parse_request(req_data):
     lines = req_data.split("\r\n")
@@ -29,7 +28,7 @@ def get_res(path, data_set:dict):
     headers: dict = {"Content-Type": "text/plain"}
     
     if path == "/":   # root path
-        body = "<h1>hi welcome to HTTP server<h1> <h4>developed by Thush</h4>"
+        body = "<h1>hi welcome to HTTP server :) :)<h1> <h4>developed by Thush</h4>"
         headers["Content-Type"] = "text/html"
     
     elif len(path_list) > 0 and path_list[0] == "echo":
@@ -68,19 +67,18 @@ def get_res(path, data_set:dict):
                     headers["Content-Type"] = "text/html"
             else:
                 status = "404 Not Found"
-                body = "<h1>Not Found :( <h1>"
+                body = "<h1>404 Not Found :( <h1>"
                 headers["Content-Type"] = "text/html"
         else:
-            file_path = path_list[1]
-            
-        
+            status = "400 Bad Request"
+            body = "<h1>400 Bad Request :( </h1>"
+            headers["Content-Type"] = "text/html"
                     
-        # else:
-        #     status = "404 Not Found"       
-        body = file_path
+    else:
+        status = "404 Not Found"       
+        body = "<h1>404 Not Found</h1>"
+        headers["Content-Type"] = "text/html"
         
-    
-    
 
     return status, body, headers
         
@@ -172,7 +170,7 @@ def main():
             try:
                 client, addr = server_socket.accept()
                 print(f"Connection from {addr} has been established")
-                # Create new thread for new client
+                # create new thread for new client
                 client_handler = threading.Thread(target=handle_request, args=(client,))
                 # handle concurrent users 
                 client_handler.start()
