@@ -1,7 +1,13 @@
 from abc import abstractmethod, ABC
-from typing import Dict
+from typing import Dict, Tuple, List
 
-class RouteHandler:
-    @staticmethod
-    def handle(self, path: str, header: Dict[str,str], body: bytes):
+class RouteHandler(ABC):
+    @abstractmethod
+    def handle(self, path: str, header: Dict[str,str], body: bytes) -> Tuple[str,bytes, Dict[str,str]]:
         pass
+    
+    
+    
+class RootHandler(RouteHandler):
+    def handle(self, path, header, body):
+        return super().handle(path, header, body)
