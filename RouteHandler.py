@@ -9,5 +9,6 @@ class RouteHandler(ABC):
     
     
 class RootHandler(RouteHandler):
-    def handle(self, path, header, body):
-        return super().handle(path, header, body)
+    def handle(self, path, header, body)-> Tuple[str,bytes, Dict[str,str]]:
+        
+        return path, header, body
