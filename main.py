@@ -2,6 +2,9 @@ import socket
 from Builder.responseBuilder import build_response
 import threading
 import os
+import queue
+
+q = queue.Queue()
 
 def parse_request(req_data):
     lines = req_data.split("\r\n")
