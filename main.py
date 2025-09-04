@@ -119,6 +119,7 @@ def handle_request(client_socket: socket.socket):
             
         header_part, _, remaining = request_data.partition(b"\r\n\r\n")
         headers_text = header_part.decode()
+        print(headers_text)
         method, path, version, data_set, _ = parse_request(headers_text)
 
         content_length = int(data_set.get("Content-Length", 0))
