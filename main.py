@@ -4,7 +4,7 @@ import threading
 import os
 import queue
 
-q = queue.Queue()
+#from handlers.handler import root_handler, echo_handler, user_agent_handler, files_get_handler, files_post_handler
 
 def parse_request(req_data):
     lines = req_data.split("\r\n")
